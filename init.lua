@@ -229,6 +229,42 @@ vim.cmd[[colorscheme cyberdream]]
 local builtin = require("telescope.builtin")
 vim.keymap.set('n', '<C-p>', builtin.find_files, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', {})
+
+-- Ouvrir le fichier sélectionné dans un split vertical (à droite)
+vim.keymap.set('n', '<leader>vs', function()
+  local api = require'nvim-tree.api'
+  api.tree.open()
+  api.node.open.vertical()
+end, { noremap = true, silent = true })
+
+-- Ouvrir le fichier sélectionné dans un split horizontal (en bas)
+vim.keymap.set('n', '<leader>hs', function()
+  local api = require'nvim-tree.api'
+  api.tree.open()
+  api.node.open.horizontal()
+end, { noremap = true, silent = true })
+
+-- Déplacer le curseur vers le split à gauche
+vim.keymap.set('n', '<leader>l', '<C-w>h', { noremap = true, silent = true })
+
+-- Déplacer le curseur vers le split en bas
+vim.keymap.set('n', '<leader>j', '<C-w>j', { noremap = true, silent = true })
+
+-- Déplacer le curseur vers le split en haut
+vim.keymap.set('n', '<leader>k', '<C-w>k', { noremap = true, silent = true })
+
+-- Déplacer le curseur vers le split à droite
+vim.keymap.set('n', '<leader>r', '<C-w>l', { noremap = true, silent = true })
+
+-- Fermer le split actuel
+vim.keymap.set('n', '<leader>c', ':close<CR>', { noremap = true, silent = true })
+
+-- Fermer tous les splits sauf celui sous le curseur
+vim.keymap.set('n', '<leader>o', ':only<CR>', { noremap = true, silent = true })
+
+
+
 
 vim.cmd 'autocmd BufRead,BufNewFile *gno set filetype=gno'
 vim.treesitter.language.register('go', 'gno')
