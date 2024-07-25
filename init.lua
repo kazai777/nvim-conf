@@ -269,6 +269,37 @@ vim.keymap.set('n', '<leader>o', ':only<CR>', { noremap = true, silent = true })
 vim.cmd 'autocmd BufRead,BufNewFile *gno set filetype=gno'
 vim.treesitter.language.register('go', 'gno')
 
+
+-- Fonction pour formater les fichiers Gno
+local function gno_fmt()
+  local file = vim.fn.expand('%')
+  vim.fn.system('gofumpt -e -w ' .. file)
+  vim.cmd('edit!')
+  vim.cmd('set syntax=go')
+  print("Formatted " .. file)
+end
+
+-- Commande utilisateur pour appeler la fonction gno_fmt
+vim.api.nvim_create_user_command('GnoFmt', gno_fmt, {})
+
+-- Groupe d'autocommandes pour les fichiers Gno
+local gno_augroup = vim.api.nvim_create_augroup('gno_autocmd', { clear = true })
+
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+  pattern = '*.gno',
+  command = 'set syntax=go',
+  group = gno_augroup,
+})
+
+vim.api.nvim_create_autocmd('BufWritePost', {
+  pattern = '*.gno',
+  callback = function()
+    gno_fmt()
+    print("BufWritePost called for " .. vim.fn.expand('%'))
+  end,
+  group = gno_augroup,
+})
+
 return {
   lsp = {
     formatting = {
